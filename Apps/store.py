@@ -101,7 +101,9 @@ def install(key, downloader=archive_bytes):
         missing = [name for name in app["required"] if not (staging / name).is_file()]
         if missing:
             raise ValueError("Download is missing required files: " + ", ".join(missing))
-        backup = Path(temp) / "backup"
+        backup = target.with_name(target.name + ".pyos-backup")
+        if backup.exists():
+            raise ValueError("An earlier install backup exists; inspect it before retrying.")
         if target.exists():
             if not target.is_dir():
                 raise ValueError("Install destination is not a directory.")
@@ -111,6 +113,8 @@ def install(key, downloader=archive_bytes):
             if key == "social":
                 launcher = ROOT / "Home" / "social.py"
                 launcher.write_text(SOCIAL_LAUNCHER, encoding="utf-8")
+            if backup.exists():
+                shutil.rmtree(backup)
         except Exception:
             if target.exists():
                 shutil.rmtree(target)
