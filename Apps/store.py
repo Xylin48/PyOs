@@ -15,6 +15,24 @@ import zipfile
 
 ROOT = Path(__file__).resolve().parent.parent
 CATALOG = {
+    "calculator": {
+        "name": "Calculator",
+        "description": "Python terminal calculator",
+        "repo": "Xylin48/PyOs",
+        "branch": "calc",
+        "files": {"Apps/calc.py": "calc.py"},
+        "target": ROOT / "Apps" / "Calculator",
+        "required": ("calc.py",),
+    },
+    "tictactoe": {
+        "name": "Tic-Tac-Toe",
+        "description": "Classic Bash game, solo or two-player",
+        "repo": "Xylin48/PyOs",
+        "branch": "calc",
+        "files": {"Home/Games/test.sh": "test.sh"},
+        "target": ROOT / "Home" / "Games" / "TicTacToe",
+        "required": ("test.sh",),
+    },
     "cookie": {
         "name": "Cookie",
         "description": "Terminal cookie-clicking game",
@@ -44,6 +62,18 @@ def archive_bytes(repo, branch):
     if len(data) > MAX_ARCHIVE_BYTES:
         raise ValueError("Download exceeds the Store size limit.")
     return data
+
+
+def download_files(repo, branch, paths, destination):
+    """Fetch only the required standalone source files from the archive branch."""
+    for source, name in paths.items():
+        url = "https://raw.githubusercontent.com/{}/{}/{}".format(repo, branch, source)
+        request = urllib.request.Request(url, headers={"User-Agent": "PyOs-Store/1.0"})
+        with urllib.request.urlopen(request, timeout=35) as response:
+            data = response.read(MAX_ARCHIVE_BYTES + 1)
+        if len(data) > MAX_ARCHIVE_BYTES:
+            raise ValueError("File exceeds the Store size limit.")
+        destination.joinpath(name).write_bytes(data)
 
 
 def unpack_archive(data, destination):
@@ -97,7 +127,10 @@ def install(key, downloader=archive_bytes):
     with tempfile.TemporaryDirectory(prefix="pyos-store-") as temp:
         staging = Path(temp) / "staging"
         staging.mkdir()
-        unpack_archive(downloader(app["repo"], app["branch"]), staging)
+        if "files" in app:
+            download_files(app["repo"], app["branch"], app["files"], staging)
+        else:
+            unpack_archive(downloader(app["repo"], app["branch"]), staging)
         missing = [name for name in app["required"] if not (staging / name).is_file()]
         if missing:
             raise ValueError("Download is missing required files: " + ", ".join(missing))
@@ -137,7 +170,7 @@ def menu():
         choice = input("\nstore>>> ").strip().lower()
         if choice in ("0", "back", "quit", "exit"):
             return
-        key = {"1": "cookie", "2": "social"}.get(choice, choice)
+        key = {str(i): name for i, name in enumerate(CATALOG, 1)}.get(choice, choice)
         if key not in CATALOG:
             print("Choose an application number, or 0 to return.")
             continue
@@ -152,8 +185,12 @@ def menu():
             print("Installed {} in {}".format(app["name"], destination.relative_to(ROOT)))
             if key == "social":
                 print("Launch with: python Home/social.py")
-            else:
+            elif key == "cookie":
                 print("Launch with: python Home/Games/Cookie/cookie.py")
+            elif key == "calculator":
+                print("Launch with: python Apps/Calculator/calc.py")
+            elif key == "tictactoe":
+                print("Launch with: bash Home/Games/TicTacToe/test.sh")
         except (OSError, ValueError, urllib.error.URLError, zipfile.BadZipFile) as exc:
             print("Installation failed: {}".format(exc))
 
