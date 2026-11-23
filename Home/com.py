@@ -26,7 +26,7 @@ while True:
     mk = input("enter name of file... ")
     os.system("rm "+ mk)
  if cmd ==("help"):
-    print("mkdir, mkfile, rmdir, rmfile, store, social, help, quit")
+    print("mkdir, mkfile, rmdir, rmfile, store, social, calc, games, help, quit")
  if cmd==("quit"):
     exit()
  if cmd==("reboot"):
@@ -68,7 +68,22 @@ while True:
  if cmd==("firefox"):
    os.system("bash ./Home/Games/firefox.sh")
  if cmd==("games"):
-   os.system("bash ./Home/Games/test.sh")
+   from pathlib import Path
+   import subprocess
+   game = Path(__file__).resolve().parent / "Games" / "TicTacToe" / "test.sh"
+   if game.is_file():
+     subprocess.call(["bash", str(game)])
+   else:
+     print("Tic-Tac-Toe is not installed. Download it from the Store.")
+ if cmd==("calc"):
+   from pathlib import Path
+   import subprocess
+   import sys
+   calculator = Path(__file__).resolve().parent.parent / "Apps" / "Calculator" / "calc.py"
+   if calculator.is_file():
+     subprocess.call([sys.executable, str(calculator)])
+   else:
+     print("Calculator is not installed. Download it from the Store.")
  if cmd==("touch"):
    mk = input("enter name of file... ")
    os.system("touch "+mk)
