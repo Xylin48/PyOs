@@ -26,7 +26,7 @@ while True:
     mk = input("enter name of file... ")
     os.system("rm "+ mk)
  if cmd ==("help"):
-    print("mkdir, mkfile, rmdir, rmfile, help, quit")
+    print("mkdir, mkfile, rmdir, rmfile, store, social, help, quit")
  if cmd==("quit"):
     exit()
  if cmd==("reboot"):
@@ -72,6 +72,21 @@ while True:
  if cmd==("touch"):
    mk = input("enter name of file... ")
    os.system("touch "+mk)
+ if cmd==("store"):
+   import subprocess
+   import sys
+   from pathlib import Path
+   store_path = Path(__file__).resolve().parent.parent / "Apps" / "store.py"
+   subprocess.call([sys.executable, str(store_path)])
+ if cmd==("social"):
+   import subprocess
+   import sys
+   from pathlib import Path
+   social_path = Path(__file__).resolve().parent / "social.py"
+   if social_path.exists():
+     subprocess.call([sys.executable, str(social_path)])
+   else:
+     print("Social is not installed. Open the Store to install it.")
  if cmd==("run"):
      r = input("enter name of file... ")
      exec(open(r).read())
