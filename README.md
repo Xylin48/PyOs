@@ -1,5 +1,8 @@
 # PyOs
 
+> **Store update:** Calculator and Tic-Tac-Toe are now optional downloads from the `calc` branch, rather than bundled files on `main`. Run `python Apps/store.py` to install them. Calculator installs to `Apps/Calculator/calc.py`; Tic-Tac-Toe installs to `Home/Games/TicTacToe/test.sh`. The PyOs commands `calc` and `games` launch these installed versions. The `calc` branch retains the original source files. The remaining historical sections below describe the original archive, not necessarily the current `main` tree.
+
+
 > **Development update (2026-11):** On the `dev/store-social-installers` branch, the original bundled `Home/social.py` and `Home/book.py` prototypes were removed. The Store now downloads Cookie from `Xylin48/cookie` into `Home/Games/Cookie/` and Social from `Xylin48/Social` (development branch) into `Home/Social/`. Installing Social creates a small `Home/social.py` launcher, so the old command path works without bundling the old social-media implementation. Run `python Apps/store.py`, or enter `store` in the PyOs shell. The material below documents the original archive and has not yet been revised to describe the new branch throughout.\n\n
 **A Python-built operating environment, application launcher, and central hub for personal projects and games.**
 
