@@ -1,5 +1,6 @@
 # PyOs
 
+> **Development update (2026-11):** On the `dev/store-social-installers` branch, the original bundled `Home/social.py` and `Home/book.py` prototypes were removed. The Store now downloads Cookie from `Xylin48/cookie` into `Home/Games/Cookie/` and Social from `Xylin48/Social` (development branch) into `Home/Social/`. Installing Social creates a small `Home/social.py` launcher, so the old command path works without bundling the old social-media implementation. Run `python Apps/store.py`, or enter `store` in the PyOs shell. The material below documents the original archive and has not yet been revised to describe the new branch throughout.\n\n
 **A Python-built operating environment, application launcher, and central hub for personal projects and games.**
 
 > Original project description: “a full operating system built in python made for hosting my projects and games a hub”
